@@ -8,7 +8,8 @@ import math
 
 
 def euclidian_distance(arr1,arr2):
-     j=len(arr)
+     #calculates the euclidian distance between two vectors(arrays in this implementation)
+     j=len(arr1)
      sum=0
      dis=0.0
      for i in range(j):
@@ -51,12 +52,17 @@ def calculate_mewk(arr,n):
           vectoravg[d]=vectoravg[d]/k
      return vectoravg
 
-def read_my_line(file_name):
+def read_all_lines(file_name):
+     vectorarr=[]
      with open(file_name) as f:
           lines=f.readlines()
           for line in lines:
                curr_vector=line.split()
-               yield curr_vector
+               for i in range(len(curr_vector)):
+                    curr_vector[i]=float(curr_vector[i])
+               vectorarr.append(curr_vector)
+     return vectorarr
+
              #i used a generator,mi amar shemavo murhav lo hashuv!
 
 
@@ -73,19 +79,17 @@ def set_clusters(arr,k):
 
 
 def main():
-     vectorarr=[]
      file_name=input("Enter file name: ")
-     while(True):#we need a condition to stop exactly where the generator stops
-          vectorarr.append(read_my_line(file_name))
+     vecarr=read_all_lines(file_name)
      #now we will create the clustering arrays needed,it will be a list of lists
      k=input("Enter number of clusters: ")
-     clusters=set_clusters(vectorarr,k)
+     clusters=set_clusters(vecarr,k)
      list_of_clusters=[]
      for i in range(k):
           list_of_clusters.append(clusters[i])
-     for i in range(k,len(vectorarr)):#bc the clusters will also be in assignment to themselves
-          j=minimal_distance(clusters,vectorarr[i])
-          list_of_clusters[j].append(vectorarr[i])
+     for i in range(k,len(vecarr)):#bc the clusters will also be in assignment to themselves
+          j=minimal_distance(clusters,vecarr[i])
+          list_of_clusters[j].append(vecarr[i])
      #now we have a list of the assigments of the clusters, we are ready to recalculate and reapeat the algorithm.
 ####the newest
 
