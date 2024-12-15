@@ -1,11 +1,6 @@
 import math
 import sys
-
-
-
-
-
-
+from copy import deepcopy
 
 
 def euclidian_distance(arr1,arr2):
@@ -14,53 +9,52 @@ def euclidian_distance(arr1,arr2):
      sum=0
      dis=0.0
      for i in range(j):
-          sum=sum+abs(arr1[i]-arr2[i])
-     dis=math.sqrt(sum)
+          sum = sum + pow(arr1[i]-arr2[i],2)
+     dis = math.sqrt(sum)
      return dis
 
 
 
 def minimal_distance(arr,vector):
      #we get as an input the array of lists(?) and we always save the minimal distance
-     p=len(arr)
-     curr_dis=-1
-     dis_min=-1
+     p = len(arr)
+     curr_dis = 0
+     dis_min = euclidian_distance(arr[0],vector)
+     answer_cluster = 0
      for i in range(p):
-          if(curr_dis==-1):
-               curr_dis=euclidian_distance(arr[i],vector)
-               dis_min=curr_dis
-          else:
-               curr_dis=euclidian_distance(arr[i],vector)
-               if(dis_min>curr_dis):
-                    dis_min=curr_dis
-     return dis_min
+          curr_dis = euclidian_distance(arr[i],vector)
+          if(dis_min > curr_dis):
+               dis_min = curr_dis
+               answer_cluster = i
+     return answer_cluster
 
 
 
-def calculate_mewk(arr,n):
+def calculate_mewk(cluster_group):
      #we calculate the value with the formula given in the algorithm in stage 4
      #len(arr) will be our k in the formula
      #n is the size of each vector in this context
-     sum=0.0
-     k=len(arr)
-     vectoravg=[]
+     sum = 0.0
+     k = len(cluster_group)
+     n = len(cluster_group[0])
+     vectoravg = []
      for i in range(n):
           vectoravg.append(0.0)
      for i in range(k):
           for p in range(n):
-               vectoravg[p]=vectoravg[p]+arr[i][p]
+               vectoravg[p] = vectoravg[p] + cluster_group[i][p]
      for d in range(n):
-          vectoravg[d]=vectoravg[d]/k
+          vectoravg[d]  = vectoravg[d] / k
      return vectoravg
 
 def read_all_lines(file_name):
-     vectorarr=[]
+     vectorarr = []
      with open(file_name) as f:
-          lines=f.readlines()
+          lines = f.readlines()
           for line in lines:
-               curr_vector=line.split()
+               curr_vector = line.split(",")
                for i in range(len(curr_vector)):
-                    curr_vector[i]=float(curr_vector[i])
+                    curr_vector[i] = float(curr_vector[i])
                vectorarr.append(curr_vector)
      return vectorarr
 
@@ -80,20 +74,40 @@ def set_clusters(arr,k):
 
 
 def main():
-     file_name=input("Enter file name: ")
-     vecarr=read_all_lines(file_name)
+     # file_name=input("Enter file name: ")
+     file_name = "input_1.txt"
+     vecarr = read_all_lines(file_name)
      #now we will create the clustering arrays needed,it will be a list of lists
-     k=input("Enter number of clusters: ")
-     clusters=set_clusters(vecarr,k)
-     list_of_clusters=[]
-     for i in range(k):
-          list_of_clusters.append(clusters[i])
-     for i in range(k,len(vecarr)):#bc the clusters will also be in assignment to themselves
-          j=minimal_distance(clusters,vecarr[i])
-          list_of_clusters[j].append(vecarr[i])
+     k = int(input("Enter number of clusters: "))
+     clusters = set_clusters(vecarr,k)
+     eps = 0.002
+     # iter_max = int(input("Enter maximum number of iterations: "))
+     iter_max = 600
+     iter_count = 0
+     while(eps > 0.001 and (iter_count < iter_max)):
+          list_of_clusters = []
+          for i in range(k):
+               list_of_clusters.append([])
+          for i in range(len(vecarr)):#bc the clusters will also be in assignment to themselves
+               j = minimal_distance(clusters,vecarr[i])
+               list_of_clusters[j].append(vecarr[i])
+          old_cen = deepcopy(clusters)
+          for i in range(len(clusters)):
+               clusters[i] = calculate_mewk(list_of_clusters[i])
+          a = [0 for i in range(len(clusters))]
+          for j in range(len(clusters)):
+               a[j] = euclidian_distance(clusters[j],old_cen[j])
+          eps = max(a)
+          iter_count += 1
+     for i in range(len(clusters)):
+          for j in range(len(clusters[i])):
+               clusters[i][j] = round(clusters[i][j], 4)
+     print(clusters)
+
+
      #now we have a list of the assigments of the clusters, we are ready to recalculate and reapeat the algorithm.
 ####the newest
-
+main()
 
 
 
