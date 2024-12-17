@@ -160,7 +160,22 @@ double calc_eps(double **cent_mat1, double **cent_mat2, int num_of_cluster, int 
     }
     return max;
 }
-
+void freeVectors(struct vector *firstVector) {
+    struct vector *tempVector;
+    struct cord *currentChord, *tempChord;
+    struct vector *currentVector = firstVector;
+    while (currentVector != NULL) {
+        tempVector = currentVector;
+        currentChord = currentVector->cords;
+        while (currentChord != NULL) {
+            tempChord = currentChord;
+            currentChord = currentChord->next;
+            free(tempChord);
+        }
+        currentVector = currentVector->next;
+        free(tempVector);
+    }
+}
 
 int main(int argc, char **argv){
     double **vec_matrix, **centroids_matrix, **old_centroids_matrix;
@@ -215,6 +230,7 @@ int main(int argc, char **argv){
     }
     
     vec_matrix = input_to_matrix(rows, cols, head_vec);
+    freeVectors(head_vec);
     centroids_matrix = init_centroids(num_of_clusters, cols, vec_matrix, rows, iter_count + 1);
     while(eps >= 0.001 && iter_count < iter_max){
         for(i = 0; i < rows; i++){
@@ -230,6 +246,8 @@ int main(int argc, char **argv){
         iter_count++;
     }
     print_matrix(centroids_matrix, num_of_clusters, cols);
+    free(centroids_matrix[0]);
+    free(centroids_matrix);
     (void)argv; 
     (void)i;
     (void)s;
@@ -241,7 +259,3 @@ int main(int argc, char **argv){
     (void)next_cord;
     return 0;
 }
-
-
-
-
