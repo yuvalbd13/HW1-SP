@@ -74,15 +74,20 @@ def set_clusters(arr,k):
 
 
 def main():
-     # file_name=input("Enter file name: ")
-     file_name = "input_1.txt"
+     iter_max = 200
+     if(len(sys.argv) == 4):
+          file_name = sys.argv[3]
+          iter_max = int(sys.argv[2])
+     else:
+          file_name = sys.argv[2]
+     k = int(sys.argv[1])
+     assert(file_name[len(file_name)-4 : len(file_name)] == ".txt")
      vecarr = read_all_lines(file_name)
+     assert(1 < k and k < len(vecarr)), "Invalid number of clusters!"
+     assert(1 < iter_max and iter_max < 1000), "Invalid maximum iteration!"
      #now we will create the clustering arrays needed,it will be a list of lists
-     k = int(input("Enter number of clusters: "))
      clusters = set_clusters(vecarr,k)
      eps = 0.002
-     # iter_max = int(input("Enter maximum number of iterations: "))
-     iter_max = 600
      iter_count = 0
      while(eps > 0.001 and (iter_count < iter_max)):
           list_of_clusters = []
@@ -107,9 +112,8 @@ def main():
 
      #now we have a list of the assigments of the clusters, we are ready to recalculate and reapeat the algorithm.
 ####the newest
+
 main()
-
-
 
 
 
