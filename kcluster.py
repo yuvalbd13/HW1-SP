@@ -5,24 +5,24 @@ from copy import deepcopy
 
 def euclidian_distance(arr1,arr2):
      #calculates the euclidian distance between two vectors(arrays in this implementation)
-     j=len(arr1)
-     sum=0
-     dis=0.0
+     j = len(arr1)
+     sum = 0
+     dis = 0.0
      for i in range(j):
-          sum = sum + pow(arr1[i]-arr2[i],2)
+          sum = sum + pow(arr1[i]-arr2[i] , 2)
      dis = math.sqrt(sum)
      return dis
 
 
 
-def minimal_distance(arr,vector):
+def minimal_distance(arr , vector):
      #we get as an input the array of lists(?) and we always save the minimal distance
      p = len(arr)
      curr_dis = 0
-     dis_min = euclidian_distance(arr[0],vector)
+     dis_min = euclidian_distance(arr[0] , vector)
      answer_cluster = 0
      for i in range(p):
-          curr_dis = euclidian_distance(arr[i],vector)
+          curr_dis = euclidian_distance(arr[i] , vector)
           if(dis_min > curr_dis):
                dis_min = curr_dis
                answer_cluster = i
