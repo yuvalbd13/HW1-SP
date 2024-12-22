@@ -62,7 +62,17 @@ double** input_to_matrix(int rows, int cols, struct vector *curr_vec){
     double **a;
     struct cord *curr_cord = curr_vec->cords;
     p = calloc(rows * (cols+1), sizeof(double));
+    if (p == NULL){
+        free(p);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     a = calloc(rows, sizeof(double *));
+    if (a == NULL){
+        free(a);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     for (i = 0; i < rows; i++){
         a[i] = p + i * (cols+1);
     }
@@ -90,8 +100,23 @@ double** init_centroids(int num_of_clusters, int dim, double **matrix, int num_o
     int *b;
     double **a;
     b = calloc(num_of_clusters, sizeof(int));
+    if (b == NULL){
+        free(b);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     p = calloc(num_of_clusters * dim, sizeof(double));
+    if (p == NULL){
+        free(p);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     a = calloc(num_of_clusters, sizeof(double *));
+    if (a == NULL){
+        free(a);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     for (i = 0; i < num_of_clusters; i++){
         a[i] = p + i * dim;
     }
@@ -148,6 +173,11 @@ void print_matrix(double** matrix, int rows, int cols) {
 double calc_eps(double **cent_mat1, double **cent_mat2, int num_of_cluster, int dim){
     double *eps_ans = calloc(num_of_cluster, sizeof(double)), max;
     int i;
+    if (eps_ans == NULL){
+        free(eps_ans);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     for(i = 0; i < num_of_cluster; i++){
         eps_ans[i] = euclidian_dis(cent_mat1[i],cent_mat2[i],dim);
     }
@@ -158,6 +188,7 @@ double calc_eps(double **cent_mat1, double **cent_mat2, int num_of_cluster, int 
             max = eps_ans[i];
         }
     }
+    free(eps_ans);
     return max;
 }
 void freeVectors(struct vector *firstVector) {
@@ -188,10 +219,20 @@ int main(int argc, char **argv){
     
     
     head_cord = malloc(sizeof(struct cord));
+    if (head_cord == NULL){
+        free(head_cord);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     curr_cord = head_cord;
     curr_cord->next = NULL;
 
     head_vec = malloc(sizeof(struct vector));
+    if (head_vec == NULL){
+        free(head_vec);
+        printf("Bad Allocation!\n");
+        exit(1);
+    }
     curr_vec = head_vec;
     curr_vec->next = NULL;
 
@@ -202,20 +243,41 @@ int main(int argc, char **argv){
             curr_cord->value = n;
             curr_vec->cords = head_cord;
             curr_vec->next = malloc(sizeof(struct vector));
+            if (curr_vec->next == NULL){
+                free(curr_vec->next);
+                printf("Bad Allocation!\n");
+                exit(1);
+            }
             curr_vec = curr_vec->next;
             curr_vec->next = NULL;
+            
             head_cord = malloc(sizeof(struct cord));
+            if (head_cord == NULL){
+                free(head_cord);
+                printf("Bad Allocation!\n");
+                exit(1);
+            }
+            curr_vec -> cords = head_cord;
             curr_cord = head_cord;
             curr_cord->next = NULL;
             continue;
         }
         curr_cord->value = n;
         curr_cord->next = malloc(sizeof(struct cord));
+        if (curr_cord->next == NULL){
+            free(curr_cord->next);
+            printf("Bad Allocation!\n");
+            exit(1);
+        }
         curr_cord = curr_cord->next;
         curr_cord->next = NULL;
     }
     cols = num_of_dim(head_vec);
     rows = num_of_vec(head_vec);
+    if(argc <= 1){
+        printf("Invalid args given!\n");
+        exit(1);
+    }
     num_of_clusters = atoi(argv[1]);
     if(argc == 3){
         iter_max = atoi(argv[2]);
@@ -248,6 +310,10 @@ int main(int argc, char **argv){
     print_matrix(centroids_matrix, num_of_clusters, cols);
     free(centroids_matrix[0]);
     free(centroids_matrix);
+    free(old_centroids_matrix[0]);
+    free(old_centroids_matrix);
+    free(vec_matrix[0]);
+    free(vec_matrix);
     (void)argv; 
     (void)i;
     (void)s;
