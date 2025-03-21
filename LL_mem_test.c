@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 
     while (scanf("%lf%c", &n, &c) == 2)
     {
-        if (c == '\n')
+        if (c == '\n' || c=='\r')
         {
             curr_cord->value = n;
             curr_vec->cords = head_cord;
@@ -69,12 +69,14 @@ int main(int argc, char **argv){
         curr_cord->next = malloc(sizeof(struct cord));
         curr_cord = curr_cord->next;
         curr_cord->next = NULL;
+   
     }
     // free(curr_vec);
     // free(head_cord);
 
 
     printf("\n%f\n", head_vec->cords->value);
+
     freeVectors(head_vec);
     exit(1);
     return 0;

@@ -106,14 +106,14 @@ def main():
           iter_count += 1
      for i in range(len(clusters)):
           for j in range(len(clusters[i])):
-               clusters[i][j] = round(clusters[i][j], 4)
-     print(clusters)
+               if(j!=len(clusters[i])-1):
+                    print(str(round(clusters[i][j], 4))+",",end='')
+               else:
+                    print(str(round(clusters[i][j], 4)))
 
+if __name__ == '__main__':
+     main()
 
-     #now we have a list of the assigments of the clusters, we are ready to recalculate and reapeat the algorithm.
-####the newest
-
-main()
 
 
 

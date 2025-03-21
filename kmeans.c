@@ -238,7 +238,7 @@ int main(int argc, char **argv){
 
 
     while (scanf("%lf%c", &n, &c) == 2){
-        if (c == '\n')
+        if (c == '\n' || c=='\r')
         {
             curr_cord->value = n;
             curr_vec->cords = head_cord;
@@ -286,6 +286,7 @@ int main(int argc, char **argv){
             exit(1);
         }
     }
+    
     if(num_of_clusters >= rows || num_of_clusters <= 1){
         printf("Invalid number of clusters!\n");
         exit(1);
